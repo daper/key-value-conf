@@ -1,6 +1,6 @@
 {
   "name": "key-value-conf",
-  "version": "1.0.0",
+  "version": "0.9.0",
   "description": "Simple lightweight and persistent key-value conf manager.",
   "main": "configuration.js",
   "directories": {
