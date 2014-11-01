@@ -1,0 +1,33 @@
+{
+  "name": "key-value-conf",
+  "version": "1.0.0",
+  "description": "Simple lightweight and persistent key-value conf manager.",
+  "main": "configuration.js",
+  "directories": {
+    "example": "examples"
+  },
+  "dependencies": {
+    "eventemitter2": "^0.4.14"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "node examples/simple-conf.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/daper/key-value-conf.git"
+  },
+  "keywords": [
+    "simple",
+    "config",
+    "key-value",
+    "conf",
+    "persistent"
+  ],
+  "author": "Daper",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/daper/key-value-conf/issues"
+  },
+  "homepage": "https://github.com/daper/key-value-conf"
+}
