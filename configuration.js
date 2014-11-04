@@ -13,7 +13,7 @@ function Configuration(location, policy) {
 
     var defaultLocation = __dirname + '/default.conf.json',
         changed         = false;
-        
+
     var policy = policy || {},
         _policy = {
             allowCreation: true,
@@ -33,7 +33,7 @@ function Configuration(location, policy) {
     var fs = require('fs');
 
     function filterTag(tag) {
-        var filtered = String(tag).replace(/[^a-zA-Z0-9 -\.]/g, '');
+        var filtered = String(tag).replace(/[^a-zA-Z0-9 -\._]/g, '');
         if(policy.debug) console.log('Filtering tag:', tag, filtered);
         return filtered;
     }
@@ -48,7 +48,7 @@ function Configuration(location, policy) {
         return ['object', 'array'].indexOf(typeof el) !== -1;
     }
 
-    function findNode(tags, allowCreation, allowOverwrite) {     
+    function findNode(tags, allowCreation, allowOverwrite) {
         var requiredConf = config,
             used = [],
             key = false,
@@ -70,7 +70,7 @@ function Configuration(location, policy) {
                         if(Object.keys(requiredConf).indexOf(key) !== -1) {
                             if(tags.length)
                                 createNode(used);
-                         
+
                             requiredConf = requiredConf[key];
                         } else {
                             createNode(used);
@@ -82,7 +82,7 @@ function Configuration(location, policy) {
                     }
                 } else if(allowCreation && !allowOverwrite) {
                     if(haveNodes(requiredConf)) {
-                        if(Object.keys(requiredConf).indexOf(key) !== -1) {                        
+                        if(Object.keys(requiredConf).indexOf(key) !== -1) {
                             requiredConf = requiredConf[key];
                         } else {
                             createNode(used);
@@ -104,7 +104,7 @@ function Configuration(location, policy) {
                 }
             }
         } else return tags;
-     
+
         return requiredConf;
 
     }
@@ -133,8 +133,8 @@ function Configuration(location, policy) {
 
     EventEmitter.prototype.constructor.call(this, {
         wildcard: true,
-        delimiter: policy.delimiter, 
-        newListener: false, 
+        delimiter: policy.delimiter,
+        newListener: false,
         maxListeners: 20
     });
 
