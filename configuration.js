@@ -110,7 +110,13 @@ function Configuration(location, policy) {
     }
 
     function exists(file) {
-        return fs.existsSync(file);
+        if(!fs.existsSync(file) && !/\.json$/.test(file)) {
+            file += ".json";
+            return fs.existsSync(file);
+        } else {
+            return fs.existsSync(file);
+        }
+
     }
 
     if(typeof location === 'object') {
