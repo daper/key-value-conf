@@ -2,7 +2,7 @@ var EventEmitter = require('eventemitter2').EventEmitter2,
     util = require('util');
 
 function Configuration(location, policy) {
-    this.VERSION = this.version = '0.9.0';
+    this.VERSION = this.version = '0.9.1';
 
     function merge_policy(obj1,obj2){
         var obj3 = {};
