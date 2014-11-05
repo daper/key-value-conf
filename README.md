@@ -11,7 +11,7 @@ key-value-conf is a simple, lightweight and persistent node.js module. Some of i
 Version
 ----
 
-0.9.0
+0.9.1
 
 Usage
 -----
