@@ -1,5 +1,6 @@
 var EventEmitter = require('eventemitter2').EventEmitter2,
-    util = require('util');
+    util = require('util'),
+    path = require('path');
 
 function Configuration(location, policy) {
     this.VERSION = this.version = '0.9.1';
@@ -109,27 +110,50 @@ function Configuration(location, policy) {
 
     }
 
-    function exists(file) {
-        if(!fs.existsSync(file) && !/\.json$/.test(file)) {
+    function reqConfigFile(file) {
+        if(typeof file === 'object')
+            return {
+                file: 'run-in',
+                data: file
+            };
+
+        file = path.resolve(__dirname, '../../', String(file || ""));
+        if(policy.debug) console.log('ReqFile:', file);
+
+        if(!fs.existsSync(file) && !/\.json$/.test(file))
             file += ".json";
-            return fs.existsSync(file);
+
+        if(policy.debug) console.log('File exists:', file, fs.existsSync(file));
+        if(fs.existsSync(file)) {
+            var fileData = fs.readFileSync(file);
+            try {
+                return {
+                    file: file,
+                    data: JSON.parse(fileData)
+                };
+            } catch(e) {
+                throw new Error(e);
+            }
         } else {
-            return fs.existsSync(file);
+            file = fs.readFileSync(defaultLocation);
+            try {
+                return {
+                    file: defaultLocation,
+                    data: JSON.parse(file)
+                };
+            } catch(e) {
+                throw new Error(e);
+            }
         }
-
     }
 
-    if(typeof location === 'object') {
-        changed = true;
-        var config = location;
-        location = 'run-in';
-    } else if(exists(location)) {
-        var config = require(location);
-    } else {
-        location = defaultLocation;
-        var config = require(location);
-    }
+    /** Initial Config **/
+    fInfo = reqConfigFile(location);
+    var config = fInfo.data;
+    location = fInfo.file;
 
+    if(policy.debug) console.log(fInfo);
+    if(fInfo.file === 'run-in') changed = true;
 
     EventEmitter.prototype.constructor.call(this, {
         wildcard: true,
@@ -177,10 +201,12 @@ function Configuration(location, policy) {
     }
 
     this.persist = function() {
-        if(exists(location)) {
+        if(fs.existsSync(location)) {
             fs.writeFileSync(location, JSON.stringify(config, null, '\t'), {encoding: policy.encoding});
             changed = false;
             if(policy.emitEvents) this.emit('persist', config);
+        } else if(location !== 'run-in') {
+            throw new Error('Location file not exists');
         }
     }
 
@@ -189,8 +215,12 @@ function Configuration(location, policy) {
     }
 
     this.reload = function() {
-        config = JSON.parse(fs.readFileSync(location, {encoding: policy.encoding}));
-        if(policy.emitEvents) this.emit('reload', config);
+        if(fs.existsSync(location)) {
+            config = JSON.parse(fs.readFileSync(location, {encoding: policy.encoding}));
+            if(policy.emitEvents) this.emit('reload', config);
+        } else if(location !== 'run-in') {
+            throw new Error('Location file not exists');
+        }
     }
 
     this.getLocation = function() {
@@ -200,13 +230,11 @@ function Configuration(location, policy) {
     this.setLocation = function(locationPath) {
         locationPath = String(locationPath);
 
-        if(!/\.json$/.test(locationPath))
-            locationPath += ".json";
-        if(!exists(locationPath))
-            fs.writeFileSync(locationPath, '{}', {encoding: policy.encoding})
-        location = locationPath;
+        var fInfo = reqConfigFile(locationPath);
+        if(policy.debug) console.log(fInfo);
 
-        if(policy.emitEvents) this.emit('location', location);
+        location = fInfo.file;
+        config = fInfo.data;
     }
 }
 
