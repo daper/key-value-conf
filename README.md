@@ -11,14 +11,14 @@ key-value-conf is a simple, lightweight and persistent node.js module. Some of i
 Version
 ----
 
-0.9.1
+0.9.2
 
 Usage
 -----
 ```javascript
 var Config = require('key-value-conf');
 
-conf = new Config('default');
+conf = new Config();
 
 conf.get();
 // { foo: 'bar' }
