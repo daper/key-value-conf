@@ -3,7 +3,7 @@ var EventEmitter = require('eventemitter2').EventEmitter2,
     path = require('path');
 
 function Configuration(location, policy) {
-    this.VERSION = this.version = '0.9.1';
+    this.VERSION = this.version = '0.9.3';
 
     function merge_policy(obj1,obj2){
         var obj3 = {};
@@ -124,7 +124,7 @@ function Configuration(location, policy) {
             file += ".json";
 
         if(policy.debug) console.log('File exists:', file, fs.existsSync(file));
-        if(fs.existsSync(file)) {
+        if(fs.existsSync(file) && fs.statSync(file).isFile()) {
             var fileData = fs.readFileSync(file);
             try {
                 return {

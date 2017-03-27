@@ -11,7 +11,7 @@ key-value-conf is a simple, lightweight and persistent node.js module. Some of i
 Version
 ----
 
-0.9.2
+0.9.3
 
 Usage
 -----
@@ -62,7 +62,7 @@ conf.on('myOtherConfig.*', function(selector, value) {
     console.log('Something has changed in myOtherConfig!');
 });
 
-conf.on(['persist', 'reload'  'location'], function(config) {
+conf.on(['persist', 'reload', 'location'], function(config) {
     console.log('Check out current config:', config);
 });
 ```
